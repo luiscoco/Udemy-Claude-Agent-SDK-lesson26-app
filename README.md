@@ -253,19 +253,12 @@ const evidence: Evidence = {
 
 Format actual Markdown and compare fresh-session context snapshots. Conversation messages differ between runs, so this is an observation rather than a controlled benchmark.
 
-Source: `src/client.ts`, selected lines 74–83. Surrounding code omitted.
+Source: `src/client.ts`, selected lines 74–76. Surrounding code omitted.
 
 ```typescript
 if (on && off) {
       const a = (on.context as any)?.totalTokens,
         b = (off.context as any)?.totalTokens;
-      $("comparison").textContent =
-        Number.isFinite(a) && Number.isFinite(b)
-          ? `Measured post-result context: on ${a.toLocaleString()} tokens; ` +
-            `off ${b.toLocaleString()} tokens. Difference ${Math.abs(b - a).toLocaleString()}. ` +
-            "Fresh sessions share the catalog and task; generated messages differ. " +
-            "This is one observation, not a guaranteed saving."
-          : "One measurement was unavailable; compare the evidence before retrying.";
 ```
 
 ## Reference topics and limits

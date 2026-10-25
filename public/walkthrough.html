@@ -56,13 +56,6 @@
       alwaysLoaded: catalog.entries
         .filter((e) =&gt; e.alwaysLoad)
         .map((e) =&gt; e.name),
-      target: catalog.target,</code></pre></section><section class="step workflow-step" id="workflow-step-13"><span class="number">13</span><h3>13. Render and compare measurements</h3><p>Format actual Markdown and compare fresh-session context snapshots. Conversation messages differ between runs, so this is an observation rather than a controlled benchmark.</p><p class="source">Source: src/client.ts · lines 74–83 · selected source; surrounding code omitted</p><pre><code class="language-typescript">if (on &amp;&amp; off) {
+      target: catalog.target,</code></pre></section><section class="step workflow-step" id="workflow-step-13"><span class="number">13</span><h3>13. Render and compare measurements</h3><p>Format actual Markdown and compare fresh-session context snapshots. Conversation messages differ between runs, so this is an observation rather than a controlled benchmark.</p><p class="source">Source: src/client.ts · lines 74–76 · selected source; surrounding code omitted</p><pre><code class="language-typescript">if (on &amp;&amp; off) {
       const a = (on.context as any)?.totalTokens,
-        b = (off.context as any)?.totalTokens;
-      $(&quot;comparison&quot;).textContent =
-        Number.isFinite(a) &amp;&amp; Number.isFinite(b)
-          ? `Measured post-result context: on ${a.toLocaleString()} tokens; ` +
-            `off ${b.toLocaleString()} tokens. Difference ${Math.abs(b - a).toLocaleString()}. ` +
-            &quot;Fresh sessions share the catalog and task; generated messages differ. &quot; +
-            &quot;This is one observation, not a guaranteed saving.&quot;
-          : &quot;One measurement was unavailable; compare the evidence before retrying.&quot;;</code></pre></section><footer>CLAUDE AGENT SDK · LESSON 26 · CATALOG · TOOL SEARCH · CONTEXT<br>TypeScript · local runtime · API key stays on the server</footer></main><script src="/navigation.js"></script><script src="/prism.js"></script><script src="/prism-markup.min.js"></script><script src="/prism-yaml.min.js"></script><script src="/prism-markdown.min.js"></script><script src="/prism-python.min.js"></script><script src="/code-highlighting.js"></script><script src="/marked.umd.js"></script><script src="/purify.min.js"></script></body></html>
+        b = (off.context as any)?.totalTokens;</code></pre></section><footer>CLAUDE AGENT SDK · LESSON 26 · CATALOG · TOOL SEARCH · CONTEXT<br>TypeScript · local runtime · API key stays on the server</footer></main><script src="/navigation.js"></script><script src="/prism.js"></script><script src="/prism-markup.min.js"></script><script src="/prism-yaml.min.js"></script><script src="/prism-markdown.min.js"></script><script src="/prism-python.min.js"></script><script src="/code-highlighting.js"></script><script src="/marked.umd.js"></script><script src="/purify.min.js"></script></body></html>

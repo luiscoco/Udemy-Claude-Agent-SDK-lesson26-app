@@ -258,11 +258,11 @@
       "number": 13,
       "title": "Render and compare measurements",
       "source": "src/client.ts",
-      "code": "if (on && off) {\n      const a = (on.context as any)?.totalTokens,\n        b = (off.context as any)?.totalTokens;\n      $(\"comparison\").textContent =\n        Number.isFinite(a) && Number.isFinite(b)\n          ? `Measured post-result context: on ${a.toLocaleString()} tokens; ` +\n            `off ${b.toLocaleString()} tokens. Difference ${Math.abs(b - a).toLocaleString()}. ` +\n            \"Fresh sessions share the catalog and task; generated messages differ. \" +\n            \"This is one observation, not a guaranteed saving.\"\n          : \"One measurement was unavailable; compare the evidence before retrying.\";",
+      "code": "if (on && off) {\n      const a = (on.context as any)?.totalTokens,\n        b = (off.context as any)?.totalTokens;",
       "language": "typescript",
       "explanation": "Format actual Markdown and compare fresh-session context snapshots. Conversation messages differ between runs, so this is an observation rather than a controlled benchmark.",
       "firstLine": 74,
-      "lastLine": 83,
+      "lastLine": 76,
       "anchors": [
         "if (on && off) {"
       ],
