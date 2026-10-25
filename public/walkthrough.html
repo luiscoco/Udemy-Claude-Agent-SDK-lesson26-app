@@ -1,0 +1,68 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Agent SDK LESSON 26 · How the app &lt;em&gt;was built.&lt;/em&gt;</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/code-highlighting.css"></head><body><main><div class="brand"><a href="/">How <span>Claude Agent SDK</span> Works</a><span class="badge">LESSON 26 / TOOL SEARCH AT SCALE</span></div><header class="hero"><div><div class="eyebrow">REGISTER · DISCOVER · MEASURE</div><h1>How the app <em>was built.</em></h1><p class="lead">Every architecture step has source-linked coloured code.</p></div><img src="/astronaut.png" alt="Course astronaut mascot"></header><nav class="nav" aria-label="Application sections"><a href="/">Application lab</a><a href="/learn.html">What you will learn</a><a href="/run.html">How to run</a><a href="/architecture.html">Architecture & workflow</a><a href="/walkthrough.html" aria-current="page">Code walkthrough</a><button id="theme" type="button">Dark mode</button></nav><div class="grid"><article class="card"><span class="number">01</span><h3>Classroom scope</h3><p>All 90 tools are real local read-only handlers. No Slack, Jira, GitHub or production database integration is implied. Search, model calls and context measurements use the actual Agent SDK.</p></article><article class="card"><span class="number">02</span><h3>Measure honestly</h3><p>getContextUsage detail full counts context categories. Compare categories by kind and id, not English names alone. Deferred schemas are out of window. JSON catalog bytes are not tokens. Post-result totals include different generated messages and discovery calls.</p></article><article class="card"><span class="number">03</span><h3>Auto thresholds</h3><p>The requested value auto:5 does not guarantee a search call. Below its context-percentage threshold, upfront loading is expected. Counts, schemas, model context, deployment support and organizational settings affect behavior.</p></article><article class="card"><span class="number">04</span><h3>Discovery experiment</h3><p>Only the course-notes tool name, description and searchHint improve. The returned record remains the same. One successful query is illustrative; it cannot establish a statistically significant accuracy gain.</p></article><article class="card"><span class="number">05</span><h3>Version-aware support</h3><p>The supplied slides describe older gateway defaults and 4.5-generation support. Current official docs say gateways default on with newer Claude Code versions and document a broader supported-model set. Installed package behavior and actual events take precedence. Microsoft Foundry deployments and policy restrictions may still force fallback.</p></article><article class="card"><span class="number">06</span><h3>Documented limits</h3><p>Official docs describe up to 10,000 tools and up to five matches per search by default. This application registers 90 tools and records returned references; it does not benchmark the limit or claim every search returns exactly five.</p></article><article class="card"><span class="number">07</span><h3>Always-loaded critical tool</h3><p>Only catalog_status is marked alwaysLoad true. It stays eligible for immediate use. Other tools remain deferred when search is active; authorization still applies.</p></article><article class="card"><span class="number">08</span><h3>Cost and privacy</h3><p>Live model queries and full context counts may incur API usage. Each experiment has an SDK budget threshold of $0.65, which is not a prepaid cap. Only the configured model credential is needed; secrets and all teaching media remain excluded from Git.</p></article></div><section class="step workflow-step" id="workflow-step-01"><span class="number">01</span><h3>1. Validate the experiment</h3><p>The host accepts a fixed classroom mode. The browser cannot supply arbitrary server commands or a replacement catalog.</p><p class="source">Source: src/config.ts · lines 28–28 · selected source; surrounding code omitted</p><pre><code class="language-typescript">return { mode: (value as RunConfig).mode };</code></pre></section><section class="step workflow-step" id="workflow-step-02"><span class="number">02</span><h3>2. Create ninety catalog entries</h3><p>Three SDK servers each register thirty actual local tools. This bounded catalog teaches scale without claiming a 10,000-tool performance test.</p><p class="source">Source: src/catalog.ts · lines 20–24 · selected source; surrounding code omitted</p><pre><code class="language-typescript">for (let index = 0; index &lt; 30; index++) {
+        const primary = server === &quot;courses&quot; &amp;&amp; index === 0;
+        const critical = server === &quot;operations&quot; &amp;&amp; index === 0;
+        const name = primary
+          ? target</code></pre></section><section class="step workflow-step" id="workflow-step-03"><span class="number">03</span><h3>3. Describe tools for discovery</h3><p>The discovery branch adds searchHint to the descriptive course-notes tool. The critical branch pins only the status tool using alwaysLoad.</p><p class="source">Source: src/catalog.ts · lines 35–42 · selected source; surrounding code omitted</p><pre><code class="language-typescript">const extras = {
+          alwaysLoad: critical &amp;&amp; mode === &quot;always-load&quot;,
+          ...(primary &amp;&amp; rich
+            ? {
+                searchHint: &quot;Search course notes by lesson, keywords and topic&quot;,
+              }
+            : {}),
+        };</code></pre></section><section class="step workflow-step" id="workflow-step-04"><span class="number">04</span><h3>4. Register executable handlers</h3><p>Each definition has a Zod input schema and a real handler. Native results come from local classroom records, not external enterprise services.</p><p class="source">Source: src/catalog.ts · lines 61–66 · selected source; surrounding code omitted</p><pre><code class="language-typescript">definitions.push(
+          tool(
+            name,
+            description,
+            schema,
+            async (input) =&gt; {</code></pre></section><section class="step workflow-step" id="workflow-step-05"><span class="number">05</span><h3>5. Pass the search environment</h3><p>Spread the inherited environment. Remove the existing override for unset, or set true, false, auto or auto:5 for the chosen experiment.</p><p class="source">Source: src/config.ts · lines 34–37 · selected source; surrounding code omitted</p><pre><code class="language-typescript">const env = { ...inherited };
+  delete env.ENABLE_TOOL_SEARCH;
+  if (SETTINGS[mode] !== undefined) env.ENABLE_TOOL_SEARCH = SETTINGS[mode];
+  return env;</code></pre></section><section class="step workflow-step" id="workflow-step-06"><span class="number">06</span><h3>6. Give category guidance</h3><p>Append category guidance to the Claude Code preset. This describes available capabilities without embedding every tool schema in the student prompt.</p><p class="source">Source: src/agent.ts · lines 107–112 · selected source; surrounding code omitted</p><pre><code class="language-typescript">systemPrompt: {
+      type: &quot;preset&quot;,
+      preset: &quot;claude_code&quot;,
+      append: CATEGORY_GUIDANCE,
+    },
+    hooks: {</code></pre></section><section class="step workflow-step" id="workflow-step-07"><span class="number">07</span><h3>7. Apply host tool boundaries</h3><p>The PreToolUse hook records actual search calls and permits only ToolSearch and the local classroom catalog. Search changes discovery, not permission boundaries.</p><p class="source">Source: src/agent.ts · lines 117–126 · selected source; surrounding code omitted</p><pre><code class="language-typescript">if (input.hook_event_name !== &quot;PreToolUse&quot;) return {};
+              if (input.tool_name === &quot;ToolSearch&quot;)
+                searchCalls.push(input.tool_name);
+              return {
+                hookSpecificOutput: {
+                  hookEventName: &quot;PreToolUse&quot;,
+                  permissionDecision: hostAllows(input.tool_name)
+                    ? &quot;allow&quot;
+                    : &quot;deny&quot;,
+                  permissionDecisionReason:</code></pre></section><section class="step workflow-step" id="workflow-step-08"><span class="number">08</span><h3>8. Start one real SDK query</h3><p>An async input generator keeps the query alive after its first response so the host can request context usage before closing it.</p><p class="source">Source: src/agent.ts · lines 185–188 · selected source; surrounding code omitted</p><pre><code class="language-typescript">const run = query({ prompt: input(), options });
+  let status = &quot;no_result&quot;,
+    text = &quot;&quot;,
+    costUsd = 0,</code></pre></section><section class="step workflow-step" id="workflow-step-09"><span class="number">09</span><h3>9. Observe search and tool use</h3><p>Record actual tool-use names and inputs. ToolSearch appearance is observed evidence; the configured environment value alone is not.</p><p class="source">Source: src/agent.ts · lines 212–215 · selected source; surrounding code omitted</p><pre><code class="language-typescript">if (block.type === &quot;tool_use&quot;) {
+            names.set(block.id, block.name);
+            emit({ type: &quot;tool&quot;, name: block.name, args: block.input });
+          }</code></pre></section><section class="step workflow-step" id="workflow-step-10"><span class="number">10</span><h3>10. Execute the matched handler</h3><p>The matched local handler records its execution and returns actual JSON content with the SEARCH-26 marker for the course record.</p><p class="source">Source: src/catalog.ts · lines 74–80 · selected source; surrounding code omitted</p><pre><code class="language-typescript">record({ name: `mcp__${server}__${name}`, input, output });
+              return {
+                content: [
+                  { type: &quot;text&quot; as const, text: JSON.stringify(output) },
+                ],
+              };
+            },</code></pre></section><section class="step workflow-step" id="workflow-step-11"><span class="number">11</span><h3>11. Measure actual context usage</h3><p>Request the full SDK measurement while the Query is still running. Used and deferred categories have different meanings; the result is not a billing total.</p><p class="source">Source: src/agent.ts · lines 240–242 · selected source; surrounding code omitted</p><pre><code class="language-typescript">context = await run.getContextUsage({ detail: &quot;full&quot; });
+          emit({ type: &quot;context&quot;, usage: context });
+        } catch (error) {</code></pre></section><section class="step workflow-step" id="workflow-step-12"><span class="number">12</span><h3>12. Preserve evidence and close</h3><p>Store the configured setting, catalog size, search calls, completed handlers and measured context. Release input and close the query after observation.</p><p class="source">Source: src/agent.ts · lines 254–265 · selected source; surrounding code omitted</p><pre><code class="language-typescript">const evidence: Evidence = {
+      mode: c.mode,
+      catalogCount: catalog.entries.length,
+      searchSetting: SETTINGS[c.mode] ?? &quot;(unset)&quot;,
+      searchCalls,
+      completed,
+      context,
+      catalogBytes: Buffer.byteLength(JSON.stringify(catalog.entries)),
+      alwaysLoaded: catalog.entries
+        .filter((e) =&gt; e.alwaysLoad)
+        .map((e) =&gt; e.name),
+      target: catalog.target,</code></pre></section><section class="step workflow-step" id="workflow-step-13"><span class="number">13</span><h3>13. Render and compare measurements</h3><p>Format actual Markdown and compare fresh-session context snapshots. Conversation messages differ between runs, so this is an observation rather than a controlled benchmark.</p><p class="source">Source: src/client.ts · lines 74–83 · selected source; surrounding code omitted</p><pre><code class="language-typescript">if (on &amp;&amp; off) {
+      const a = (on.context as any)?.totalTokens,
+        b = (off.context as any)?.totalTokens;
+      $(&quot;comparison&quot;).textContent =
+        Number.isFinite(a) &amp;&amp; Number.isFinite(b)
+          ? `Measured post-result context: on ${a.toLocaleString()} tokens; ` +
+            `off ${b.toLocaleString()} tokens. Difference ${Math.abs(b - a).toLocaleString()}. ` +
+            &quot;Fresh sessions share the catalog and task; generated messages differ. &quot; +
+            &quot;This is one observation, not a guaranteed saving.&quot;
+          : &quot;One measurement was unavailable; compare the evidence before retrying.&quot;;</code></pre></section><footer>CLAUDE AGENT SDK · LESSON 26 · CATALOG · TOOL SEARCH · CONTEXT<br>TypeScript · local runtime · API key stays on the server</footer></main><script src="/navigation.js"></script><script src="/prism.js"></script><script src="/prism-markup.min.js"></script><script src="/prism-yaml.min.js"></script><script src="/prism-markdown.min.js"></script><script src="/prism-python.min.js"></script><script src="/code-highlighting.js"></script><script src="/marked.umd.js"></script><script src="/purify.min.js"></script></body></html>

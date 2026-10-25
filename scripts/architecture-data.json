@@ -1,0 +1,273 @@
+{
+  "lanes": [
+    "Student UI",
+    "TypeScript host",
+    "SDK + Claude",
+    "MCP catalog",
+    "Context report"
+  ],
+  "arrows": [
+    [
+      0,
+      1,
+      "1. Validate the experiment"
+    ],
+    [
+      1,
+      1,
+      "2. Create ninety catalog entries"
+    ],
+    [
+      1,
+      2,
+      "3. Describe tools for discovery"
+    ],
+    [
+      2,
+      3,
+      "4. Register executable handlers"
+    ],
+    [
+      1,
+      2,
+      "5. Pass the search environment"
+    ],
+    [
+      1,
+      2,
+      "6. Give category guidance"
+    ],
+    [
+      2,
+      1,
+      "7. Apply host tool boundaries"
+    ],
+    [
+      1,
+      2,
+      "8. Start one real SDK query"
+    ],
+    [
+      2,
+      1,
+      "9. Observe search and tool use"
+    ],
+    [
+      2,
+      3,
+      "10. Execute the matched handler"
+    ],
+    [
+      1,
+      2,
+      "11. Measure actual context usage"
+    ],
+    [
+      1,
+      1,
+      "12. Preserve evidence and close"
+    ],
+    [
+      1,
+      0,
+      "13. Render and compare measurements"
+    ]
+  ],
+  "steps": [
+    {
+      "number": 1,
+      "title": "Validate the experiment",
+      "source": "src/config.ts",
+      "code": "return { mode: (value as RunConfig).mode };",
+      "language": "typescript",
+      "explanation": "The host accepts a fixed classroom mode. The browser cannot supply arbitrary server commands or a replacement catalog.",
+      "firstLine": 28,
+      "lastLine": 28,
+      "anchors": [
+        "return { mode: (value as RunConfig).mode };"
+      ],
+      "sourceSHA256": "e1a063b7f6567effad00e162bb064edb53a6e8c36ff4d620ddbb563d4488146c",
+      "narration": "Step 1. The host accepts a fixed classroom mode. The browser cannot supply arbitrary server commands or a replacement catalog. This source excerpt shows the corresponding application statement."
+    },
+    {
+      "number": 2,
+      "title": "Create ninety catalog entries",
+      "source": "src/catalog.ts",
+      "code": "for (let index = 0; index < 30; index++) {\n        const primary = server === \"courses\" && index === 0;\n        const critical = server === \"operations\" && index === 0;\n        const name = primary\n          ? target",
+      "language": "typescript",
+      "explanation": "Three SDK servers each register thirty actual local tools. This bounded catalog teaches scale without claiming a 10,000-tool performance test.",
+      "firstLine": 20,
+      "lastLine": 24,
+      "anchors": [
+        "for (let index = 0; index < 30; index++) {"
+      ],
+      "sourceSHA256": "de3d95c7f9a351c3e604c7e0e3440bf3ca12989883dc3d6a9d2031463d4922f6",
+      "narration": "Step 2. Three SDK servers each register thirty actual local tools. This bounded catalog teaches scale without claiming a 10,000-tool performance test. This source excerpt shows the corresponding application statement."
+    },
+    {
+      "number": 3,
+      "title": "Describe tools for discovery",
+      "source": "src/catalog.ts",
+      "code": "const extras = {\n          alwaysLoad: critical && mode === \"always-load\",\n          ...(primary && rich\n            ? {\n                searchHint: \"Search course notes by lesson, keywords and topic\",\n              }\n            : {}),\n        };",
+      "language": "typescript",
+      "explanation": "The discovery branch adds searchHint to the descriptive course-notes tool. The critical branch pins only the status tool using alwaysLoad.",
+      "firstLine": 35,
+      "lastLine": 42,
+      "anchors": [
+        "const extras = {"
+      ],
+      "sourceSHA256": "de3d95c7f9a351c3e604c7e0e3440bf3ca12989883dc3d6a9d2031463d4922f6",
+      "narration": "Step 3. The discovery branch adds searchHint to the descriptive course-notes tool. The critical branch pins only the status tool using alwaysLoad. This source excerpt shows the corresponding application statement."
+    },
+    {
+      "number": 4,
+      "title": "Register executable handlers",
+      "source": "src/catalog.ts",
+      "code": "definitions.push(\n          tool(\n            name,\n            description,\n            schema,\n            async (input) => {",
+      "language": "typescript",
+      "explanation": "Each definition has a Zod input schema and a real handler. Native results come from local classroom records, not external enterprise services.",
+      "firstLine": 61,
+      "lastLine": 66,
+      "anchors": [
+        "definitions.push("
+      ],
+      "sourceSHA256": "de3d95c7f9a351c3e604c7e0e3440bf3ca12989883dc3d6a9d2031463d4922f6",
+      "narration": "Step 4. Each definition has a Zod input schema and a real handler. Native results come from local classroom records, not external enterprise services. This source excerpt shows the corresponding application statement."
+    },
+    {
+      "number": 5,
+      "title": "Pass the search environment",
+      "source": "src/config.ts",
+      "code": "const env = { ...inherited };\n  delete env.ENABLE_TOOL_SEARCH;\n  if (SETTINGS[mode] !== undefined) env.ENABLE_TOOL_SEARCH = SETTINGS[mode];\n  return env;",
+      "language": "typescript",
+      "explanation": "Spread the inherited environment. Remove the existing override for unset, or set true, false, auto or auto:5 for the chosen experiment.",
+      "firstLine": 34,
+      "lastLine": 37,
+      "anchors": [
+        "const env = { ...inherited };"
+      ],
+      "sourceSHA256": "e1a063b7f6567effad00e162bb064edb53a6e8c36ff4d620ddbb563d4488146c",
+      "narration": "Step 5. Spread the inherited environment. Remove the existing override for unset, or set true, false, auto or auto:5 for the chosen experiment. This source excerpt shows the corresponding application statement."
+    },
+    {
+      "number": 6,
+      "title": "Give category guidance",
+      "source": "src/agent.ts",
+      "code": "systemPrompt: {\n      type: \"preset\",\n      preset: \"claude_code\",\n      append: CATEGORY_GUIDANCE,\n    },\n    hooks: {",
+      "language": "typescript",
+      "explanation": "Append category guidance to the Claude Code preset. This describes available capabilities without embedding every tool schema in the student prompt.",
+      "firstLine": 107,
+      "lastLine": 112,
+      "anchors": [
+        "systemPrompt: {"
+      ],
+      "sourceSHA256": "cf53ecac1110c68d1673dc70b7414143e9edeeb8b9ef10d0be68fa1a2174510a",
+      "narration": "Step 6. Append category guidance to the Claude Code preset. This describes available capabilities without embedding every tool schema in the student prompt. This source excerpt shows the corresponding application statement."
+    },
+    {
+      "number": 7,
+      "title": "Apply host tool boundaries",
+      "source": "src/agent.ts",
+      "code": "if (input.hook_event_name !== \"PreToolUse\") return {};\n              if (input.tool_name === \"ToolSearch\")\n                searchCalls.push(input.tool_name);\n              return {\n                hookSpecificOutput: {\n                  hookEventName: \"PreToolUse\",\n                  permissionDecision: hostAllows(input.tool_name)\n                    ? \"allow\"\n                    : \"deny\",\n                  permissionDecisionReason:",
+      "language": "typescript",
+      "explanation": "The PreToolUse hook records actual search calls and permits only ToolSearch and the local classroom catalog. Search changes discovery, not permission boundaries.",
+      "firstLine": 117,
+      "lastLine": 126,
+      "anchors": [
+        "if (input.hook_event_name !== \"PreToolUse\") return {};"
+      ],
+      "sourceSHA256": "cf53ecac1110c68d1673dc70b7414143e9edeeb8b9ef10d0be68fa1a2174510a",
+      "narration": "Step 7. The PreToolUse hook records actual search calls and permits only ToolSearch and the local classroom catalog. Search changes discovery, not permission boundaries. This source excerpt shows the corresponding application statement."
+    },
+    {
+      "number": 8,
+      "title": "Start one real SDK query",
+      "source": "src/agent.ts",
+      "code": "const run = query({ prompt: input(), options });\n  let status = \"no_result\",\n    text = \"\",\n    costUsd = 0,",
+      "language": "typescript",
+      "explanation": "An async input generator keeps the query alive after its first response so the host can request context usage before closing it.",
+      "firstLine": 185,
+      "lastLine": 188,
+      "anchors": [
+        "const run = query({ prompt: input(), options });"
+      ],
+      "sourceSHA256": "cf53ecac1110c68d1673dc70b7414143e9edeeb8b9ef10d0be68fa1a2174510a",
+      "narration": "Step 8. An async input generator keeps the query alive after its first response so the host can request context usage before closing it. This source excerpt shows the corresponding application statement."
+    },
+    {
+      "number": 9,
+      "title": "Observe search and tool use",
+      "source": "src/agent.ts",
+      "code": "if (block.type === \"tool_use\") {\n            names.set(block.id, block.name);\n            emit({ type: \"tool\", name: block.name, args: block.input });\n          }",
+      "language": "typescript",
+      "explanation": "Record actual tool-use names and inputs. ToolSearch appearance is observed evidence; the configured environment value alone is not.",
+      "firstLine": 212,
+      "lastLine": 215,
+      "anchors": [
+        "if (block.type === \"tool_use\") {"
+      ],
+      "sourceSHA256": "cf53ecac1110c68d1673dc70b7414143e9edeeb8b9ef10d0be68fa1a2174510a",
+      "narration": "Step 9. Record actual tool-use names and inputs. ToolSearch appearance is observed evidence; the configured environment value alone is not. This source excerpt shows the corresponding application statement."
+    },
+    {
+      "number": 10,
+      "title": "Execute the matched handler",
+      "source": "src/catalog.ts",
+      "code": "record({ name: `mcp__${server}__${name}`, input, output });\n              return {\n                content: [\n                  { type: \"text\" as const, text: JSON.stringify(output) },\n                ],\n              };\n            },",
+      "language": "typescript",
+      "explanation": "The matched local handler records its execution and returns actual JSON content with the SEARCH-26 marker for the course record.",
+      "firstLine": 74,
+      "lastLine": 80,
+      "anchors": [
+        "record({ name: `mcp__${server}__${name}`, input, output });"
+      ],
+      "sourceSHA256": "de3d95c7f9a351c3e604c7e0e3440bf3ca12989883dc3d6a9d2031463d4922f6",
+      "narration": "Step 10. The matched local handler records its execution and returns actual JSON content with the SEARCH-26 marker for the course record. This source excerpt shows the corresponding application statement."
+    },
+    {
+      "number": 11,
+      "title": "Measure actual context usage",
+      "source": "src/agent.ts",
+      "code": "context = await run.getContextUsage({ detail: \"full\" });\n          emit({ type: \"context\", usage: context });\n        } catch (error) {",
+      "language": "typescript",
+      "explanation": "Request the full SDK measurement while the Query is still running. Used and deferred categories have different meanings; the result is not a billing total.",
+      "firstLine": 240,
+      "lastLine": 242,
+      "anchors": [
+        "context = await run.getContextUsage({ detail: \"full\" });"
+      ],
+      "sourceSHA256": "cf53ecac1110c68d1673dc70b7414143e9edeeb8b9ef10d0be68fa1a2174510a",
+      "narration": "Step 11. Request the full SDK measurement while the Query is still running. Used and deferred categories have different meanings; the result is not a billing total. This source excerpt shows the corresponding application statement."
+    },
+    {
+      "number": 12,
+      "title": "Preserve evidence and close",
+      "source": "src/agent.ts",
+      "code": "const evidence: Evidence = {\n      mode: c.mode,\n      catalogCount: catalog.entries.length,\n      searchSetting: SETTINGS[c.mode] ?? \"(unset)\",\n      searchCalls,\n      completed,\n      context,\n      catalogBytes: Buffer.byteLength(JSON.stringify(catalog.entries)),\n      alwaysLoaded: catalog.entries\n        .filter((e) => e.alwaysLoad)\n        .map((e) => e.name),\n      target: catalog.target,",
+      "language": "typescript",
+      "explanation": "Store the configured setting, catalog size, search calls, completed handlers and measured context. Release input and close the query after observation.",
+      "firstLine": 254,
+      "lastLine": 265,
+      "anchors": [
+        "const evidence: Evidence = {"
+      ],
+      "sourceSHA256": "cf53ecac1110c68d1673dc70b7414143e9edeeb8b9ef10d0be68fa1a2174510a",
+      "narration": "Step 12. Store the configured setting, catalog size, search calls, completed handlers and measured context. Release input and close the query after observation. This source excerpt shows the corresponding application statement."
+    },
+    {
+      "number": 13,
+      "title": "Render and compare measurements",
+      "source": "src/client.ts",
+      "code": "if (on && off) {\n      const a = (on.context as any)?.totalTokens,\n        b = (off.context as any)?.totalTokens;\n      $(\"comparison\").textContent =\n        Number.isFinite(a) && Number.isFinite(b)\n          ? `Measured post-result context: on ${a.toLocaleString()} tokens; ` +\n            `off ${b.toLocaleString()} tokens. Difference ${Math.abs(b - a).toLocaleString()}. ` +\n            \"Fresh sessions share the catalog and task; generated messages differ. \" +\n            \"This is one observation, not a guaranteed saving.\"\n          : \"One measurement was unavailable; compare the evidence before retrying.\";",
+      "language": "typescript",
+      "explanation": "Format actual Markdown and compare fresh-session context snapshots. Conversation messages differ between runs, so this is an observation rather than a controlled benchmark.",
+      "firstLine": 74,
+      "lastLine": 83,
+      "anchors": [
+        "if (on && off) {"
+      ],
+      "sourceSHA256": "81e12684b174782976ab3a30e1a24379136709cca266c7b6d8126bb6664c4fb6",
+      "narration": "Step 13. Format actual Markdown and compare fresh-session context snapshots. Conversation messages differ between runs, so this is an observation rather than a controlled benchmark. This source excerpt shows the corresponding application statement."
+    }
+  ]
+}
